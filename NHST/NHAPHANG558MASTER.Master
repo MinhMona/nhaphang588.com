@@ -1,0 +1,197 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="NHAPHANG558MASTER.master.cs" Inherits="NHST.NHAPHANG558MASTER" %>
+
+<!DOCTYPE html>
+<html>
+<head runat="server">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="shortcut icon" href="" type="image/x-icon">
+    <link rel="stylesheet" href="/App_Themes/CSS558/js/Slick-Js/slick-theme.css">
+    <link rel="stylesheet" href="/App_Themes/CSS558/js/ms-Dropdown-master/css/msdropdown/dd.css">
+    <link rel="stylesheet" href="/App_Themes/CSS558/js/Magnific-Popup-master/magnific-popup.css">
+    <link rel="stylesheet" href="/App_Themes/CSS558/js/Slick-Js/slick.css">
+    <link rel="stylesheet" href="/App_Themes/CSS558/js/Font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/App_Themes/CSS558/css/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <script src="/App_Themes/CSS558/js/jquery-3.4.1.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <title>NHẬP HÀNG 558</title>
+    <asp:Literal ID="ltrSEO" runat="server"></asp:Literal>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <header class="header">
+            <div class="top-header">
+                <div class="container isner">
+                    <div class="top-info-nav">
+                        <ul>
+                            <asp:Literal runat="server" ID="ltrHeaderLeft"></asp:Literal>
+                        </ul>
+                    </div>
+                    <%-- <div class="left-info-nav">
+                        <ul>
+                            <a href="/dang-ky" class="btn btn-login">Đăng ký</a>
+                            <a href="/dang-nhap" class="btn btn-login">Đăng nhập</a>
+                        </ul>
+                    </div>--%>
+                </div>
+            </div>
+            <div class="main-header ">
+                <div class="not-container">
+                    <div class="isner">
+                        <div class="main-logo">
+                            <asp:Literal runat="server" ID="ltrLogo"></asp:Literal>
+                        </div>
+                        <div class="main-right-phuong">
+                            <div class="main-menu">
+                                <ul class="main-menu-nav">
+                                    <asp:Literal runat="server" ID="ltrMenu"></asp:Literal>
+                                </ul>
+                                <div class="main-menu-overlay"></div>
+                            </div>
+                            <div class="user-box">
+                                <asp:Literal runat="server" ID="ltrLogin"></asp:Literal>
+                            </div>
+                        </div>
+                        <div class="hamburger-btn main-menu-btn">
+                            <div class="bar"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+        </asp:ContentPlaceHolder>
+        <footer class="footer">
+            <div class="container">
+                <div class="table-footer">
+                    <div class="columns">
+                        <div class="colum">
+                            <div class="content">
+                                <div class="logo-ft">
+                                    <a href="#">
+                                        <img src="/App_Themes/CSS558/images/logo.png" alt="">
+                                    </a>
+                                </div>
+                                <%--<p class="desc">
+                                    Lorem ipsum dolor sit amet, consect adipiscing elit.
+                                </p>--%>
+                            </div>
+                        </div>
+                        <div class="colum">
+                            <div class="content">
+                                <h3 class="title">Liên hệ
+                                </h3>
+                                <ul class="list-ft">
+                                    <asp:Literal runat="server" ID="ltrContactFt"></asp:Literal>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="colum">
+                            <div class="content">
+                                <h3 class="title">THÔNG TIN
+                                </h3>
+                                <ul class="list-ft">
+                                    <li>
+                                        <a href="/chuyen-muc/gioi-thieu">Giới thiệu</a>
+                                    </li>
+                                    <li>
+                                        <a href="/chuyen-muc/bang-gia">Bảng giá</a>
+                                    </li>
+                                    <li>
+                                        <a href="/chuyen-muc/huong-dan">Hướng dẫn</a>
+                                    </li>
+                                    <li>
+                                        <a href="/chuyen-muc/chinh-sach">Chính sách</a>
+                                    </li>
+                                    <li>
+                                        <a href="/chuyen-muc/tin-tuc">Tin tức</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="colum">
+                            <div class="content">
+                                <h3 class="title">DỊCH VỤ
+                                </h3>
+                                <ul class="list-ft">
+                                    <li>
+                                        <a href="#">Đặt hàng taobao</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Đặt hàng tmall</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Đặt hàng 1688</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Vận chuyển hàng Trung Quốc</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="colum">
+                            <div class="content">
+                                <h3 class="title">Mạng xã hội
+                                </h3>
+                                <iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fprofile.php%3Fid%3D100075781305278&tabs=timeline&width=340&height=331&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId" width="340" height="331" style="border: none; overflow: hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
+                                <%-- <ul class="list-social">
+                                    <li>
+                                        <a href="#">
+                                            <i class="fa fa-facebook" aria-hidden="true"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <i class="fa fa-twitter" aria-hidden="true"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <i class="fa fa-youtube" aria-hidden="true"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <i class="fa fa-camera-retro" aria-hidden="true"></i>
+                                        </a>
+                                    </li>
+                                </ul>--%>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="copy-right">
+                <p class="text-copy">
+                    © COPYRIGHT NHẬP HÀNG 558
+                </p>
+            </div>
+        </footer>
+        <div class="m-backtotop" aria-hidden="true">
+            <div class="arrow">
+                <i class="fa fa-caret-up" aria-hidden="true"></i>
+            </div>
+            <div class="text">
+                Back to top
+            </div>
+        </div>
+        <script src="/App_Themes/CSS558//js/Slick-Js/slick.min.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
+        <script src="/App_Themes/CSS558/js/Counter-Up-master/jquery.counterup.min.js"></script>
+        <script src="/App_Themes/CSS558/js/Magnific-Popup-master/jquery.magnific-popup.min.js"></script>
+        <script src="/App_Themes/CSS558/js/ms-Dropdown-master/js/msdropdown/jquery.dd.min.js"></script>
+        <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+        <script src="/App_Themes/CSS558/js/main.js"></script>
+        <script>
+            $("#brand-source").msDropdown();
+            function isEmpty(str) {
+                return !str.replace(/^\s+/g, '').length; // boolean (`true` if field is empty)
+            }
+        </script>
+    </form>
+</body>
+</html>
