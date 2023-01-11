@@ -194,5 +194,28 @@
 
             $('#<%=search.ClientID%>').click();
         })
+
+        function deleteSmallPackage(ID) {
+            var r = confirm("Bạn muốn xóa mã vận đơn này?");
+            if (r == true) {
+                $.ajax({
+                    type: "POST",
+                    url: "/manager/Order-Transaction-Code.aspx/deleteSmallPackage",
+                    data: "{ID:'" + ID + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (msg) {
+                        if (msg.d == "1") {
+                            location.reload();
+                        }
+                    },
+                    error: function (xmlhttprequest, textstatus, errorthrow) {
+                        //alert('lỗi');
+                    }
+                });
+            }
+            else {
+            }
+        }
     </script>
 </asp:Content>

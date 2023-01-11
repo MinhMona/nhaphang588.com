@@ -33,9 +33,58 @@ namespace NHST.manager
                 {
                     LoadData();
                     LoadFrom();
+                    LoadDDL();
                 }
             }
         }
+
+        public void LoadDDL()
+        {
+            var user = AccountController.GetAllByRoleIDNotHiden(1);
+            if (user.Count > 0)
+            {
+                ddlUsername.DataSource = user;
+                ddlUsername.DataBind();
+            }
+
+            var user1 = AccountController.GetAllByRoleIDNotHiden(1);
+            if (user1.Count > 0)
+            {
+                ddlUsername1.DataSource = user1;
+                ddlUsername1.DataBind();
+            }
+
+            var khotq = WarehouseFromController.GetAllWithIsHidden(false);
+            if (khotq.Count > 0)
+            {
+                foreach (var item in khotq)
+                {
+                    ListItem us = new ListItem(item.WareHouseName, item.ID.ToString());
+                    ddlKhoTQ.Items.Add(us);
+                }
+            }
+
+            var khovn = WarehouseController.GetAllWithIsHidden(false);
+            if (khovn.Count > 0)
+            {
+                foreach (var item in khovn)
+                {
+                    ListItem us = new ListItem(item.WareHouseName, item.ID.ToString());
+                    ddlKhoVN.Items.Add(us);
+                }
+            }
+
+            var shipping = ShippingTypeToWareHouseController.GetAllWithIsHidden(false);
+            if (shipping.Count > 0)
+            {
+                foreach (var item in shipping)
+                {
+                    ListItem us = new ListItem(item.ShippingTypeName, item.ID.ToString());
+                    ddlPTVC.Items.Add(us);
+                }
+            }
+        }
+
         private void LoadFrom()
         {
             var bp = BigPackageController.GetAll("");
@@ -157,7 +206,10 @@ namespace NHST.manager
                     hcm.Append("<td>");
                     hcm.Append("<div class=\"action-table\">");
                     //hcm.Append("<a href=\"#\" class=\"edit-mode\" id=\"EditFunction-" + item.ID + "\" onclick=\"EditFunction(" + item.ID + ")\" data-position=\"top\" ><i class=\"material-icons\">edit</i><span>Cập nhật</span></a>");
-                    hcm.Append("<a href=\"#modalConfirm\" id=\"ConfirmFunction-" + item.ID + "\" onclick=\"ConfirmFunction(" + item.ID + ")\" class=\" modal-trigger\" data-position=\"top\"><i class=\"material-icons\">done</i><span>Xác nhận</span></a>");
+                    //hcm.Append("<a href=\"#modalConfirm\" id=\"ConfirmFunction-" + item.ID + "\" onclick=\"ConfirmFunction(" + item.ID + ")\" class=\" modal-trigger\" data-position=\"top\"><i class=\"material-icons\">done</i><span>Xác nhận</span></a>");
+                    hcm.Append("<a href=\"javascript:;\" onclick=\"GetbyTrancode('" + item.ID + "')\" class=\"tooltipped updatebutton\" data-position=\"top\" data-tooltip=\"Gán kiện ký gửi\"><i class=\"material-icons\">add</i></a>");
+                    hcm.Append("<a href=\"javascript:;\" onclick=\"GetbyTrancodeOrder('" + item.ID + "')\" class=\"tooltipped updatebutton\" data-position=\"top\" data-tooltip=\"Gán kiện mua hộ\"><i class=\"material-icons\">add</i></a>");
+
                     hcm.Append("</div>");
                     hcm.Append("</td>");
                     hcm.Append("</tr>");
@@ -319,37 +371,549 @@ namespace NHST.manager
             string username_current = Session["userLoginSystem"].ToString();
             DateTime currendDate = DateTime.Now;
             int id = hdfID.Value.ToInt(0);
-            string NoteStaff = pNoteStaff.Text;
             var s = SmallPackageController.GetByID(id);
             if (s != null)
             {
-                int status = ddlConfirm.SelectedValue.ToString().ToInt(1);
-                if (status == 1)
+                string code = txtMainOrderCode.Text;
+                int UID = Convert.ToInt32(txtUID.Text);
+                if (UID > 0)
                 {
-                    string kq = SmallPackageController.UpdateCancelConfirm(id, NoteStaff, status, currendDate, username_current);
-                    if (kq.ToInt(0) > 0)
+                    var acc = AccountController.GetByID(UID);
+                    var mainOrderCode = MainOrderCodeController.GetByCode(code);
+                    if (mainOrderCode != null)
                     {
-                        PJUtils.ShowMessageBoxSwAlert("Cập nhật thành công.", "s", true, Page);
+                        var mainOrder = MainOrderController.GetByIDAndUID(mainOrderCode.MainOrderID ?? 0, UID);
+                        if (mainOrder != null)
+                        {
+                            string kq = SmallPackageController.UpdateLost(id, mainOrder.ID, mainOrderCode.ID, UID, acc.Username, currendDate, username_current);
+                            if (kq.ToInt(0) > 0)
+                            {
+                                int QuantityBarcode = mainOrder.QuantityBarcode ?? 0 + 1;
+                                string ListMVD = mainOrder.Barcode;
+                                ListMVD += s.OrderTransactionCode + " | ";
+                                MainOrderController.UpdateBarcode(mainOrder.ID, ListMVD);
+                                MainOrderController.UpdateQuantityBarcode(mainOrder.ID, QuantityBarcode);
+                                PJUtils.ShowMessageBoxSwAlert("Cập nhật thành công.", "s", true, Page);
+                            }
+                            else
+                            {
+                                PJUtils.ShowMessageBoxSwAlert("Cập nhật thất bại.", "e", true, Page);
+                            }
+                        }
                     }
                     else
                     {
-                        PJUtils.ShowMessageBoxSwAlert("Cập nhật thất bại.", "e", true, Page);
-                    }
-                }
-                else
-                {
-                    string kq = SmallPackageController.UpdateStatusConfirm(id, status, NoteStaff, currendDate, username_current);
-                    if (kq.ToInt(0) > 0)
-                    {
-                        PJUtils.ShowMessageBoxSwAlert("Xác nhận thành công.", "s", true, Page);
-                    }
-                    else
-                    {
-                        PJUtils.ShowMessageBoxSwAlert("Xác nhận thất bại.", "e", true, Page);
+                        PJUtils.ShowMessageBoxSwAlert("Mã đơn hàng không tồn tại.", "e", true, Page);
                     }
                 }
             }
         }
+        //protected void btnConfirm2_Click(object sender, EventArgs e)
+        //{
+        //    if (!Page.IsValid) return;
+        //    string username_current = Session["userLoginSystem"].ToString();
+        //    DateTime currendDate = DateTime.Now;
+        //    int id = hdfID.Value.ToInt(0);
+        //    var s = SmallPackageController.GetByID(id);
+        //    if (s != null)
+        //    {
+        //        string code = txtMainOrderCode.Text;
+        //        int UID = Convert.ToInt32(txtUID.Text);
+        //        if (UID > 0)
+        //        {
+        //            var acc = AccountController.GetByID(UID);
+        //            var mainOrderCode = MainOrderCodeController.GetByCode(code);
+        //            var mainOrder = MainOrderController.GetByIDAndUID(mainOrderCode.MainOrderID ?? 0, UID);
+        //            if (mainOrder != null)
+        //            {
+        //                string kq = SmallPackageController.UpdateLost(id, mainOrder.ID, UID, acc.Username, currendDate, username_current);
+        //                if (kq.ToInt(0) > 0)
+        //                {
+        //                    PJUtils.ShowMessageBoxSwAlert("Cập nhật thành công.", "s", true, Page);
+        //                }
+        //                else
+        //                {
+        //                    PJUtils.ShowMessageBoxSwAlert("Cập nhật thất bại.", "e", true, Page);
+        //                }
+        //            }
+        //            else
+        //            {
+        //                PJUtils.ShowMessageBoxSwAlert("Mã đơn hàng không tồn tại.", "e", true, Page);
+        //            }
+        //        }
+        //    }
+        //}
+
+        [WebMethod]
+        public static string GetpackageID(string packageID)
+        {
+            if (HttpContext.Current.Session["userLoginSystem"] != null)
+            {
+                string username = HttpContext.Current.Session["userLoginSystem"].ToString();
+                var user = AccountController.GetByUsername(username);
+                if (user != null)
+                {
+                    int userRole = Convert.ToInt32(user.RoleID);
+
+                    if (userRole == 0 || userRole == 2 || userRole == 5)
+                    {
+                        if (!string.IsNullOrEmpty(packageID))
+                        {
+
+                            var sm = SmallPackageController.GetByID(packageID.ToInt(0));
+                            if (sm != null)
+                            {
+                                JavaScriptSerializer serializer = new JavaScriptSerializer();
+                                return serializer.Serialize(sm);
+                            }
+                            else
+                            {
+                                return "none";
+                            }
+                        }
+                        else
+                        {
+                            return "none";
+                        }
+                    }
+                    else
+                        return "none";
+                }
+                else
+                {
+                    return "none";
+                }
+            }
+            else
+            {
+                return "none";
+            }
+        }
+        [WebMethod]
+        public static string UpdateKyGui(string ordertransaction, string Username, string KhoTQ, string KhoVN, string PTVC)
+        {
+            if (HttpContext.Current.Session["userLoginSystem"] != null)
+            {
+                string username_check = HttpContext.Current.Session["userLoginSystem"].ToString();
+                DateTime currentDate = DateTime.UtcNow.AddHours(7);
+                var user_check = AccountController.GetByUsername(username_check);
+                if (user_check != null)
+                {
+                    double currency = 0;
+                    var config = ConfigurationController.GetByTop1();
+                    if (config != null)
+                    {
+                        currency = Convert.ToDouble(config.Currency);
+                    }
+                    int userRole_check = Convert.ToInt32(user_check.RoleID);
+                    if (userRole_check == 0 || userRole_check == 2 || userRole_check == 5)
+                    {
+                        var checkcode = SmallPackageController.GetTroiNoi(ordertransaction);
+                        if (checkcode != null)
+                        {
+                            var checkuser = AccountController.GetByUsername(AccountController.GetByID(Convert.ToInt32(Username)).Username);
+                            if (checkuser != null)
+                            {
+                                int SaleID = 0;
+                                string SaleName = "";
+                                SaleID = Convert.ToInt32(checkuser.SaleID);
+                                if (SaleID > 0)
+                                {
+                                    var sale = AccountController.GetByID(SaleID);
+                                    if (sale != null)
+                                    {
+                                        SaleName = sale.Username;
+                                    }
+                                }
+                                string tID = TransportationOrderController.InsertNew(checkuser.ID, checkuser.Username,
+                                KhoTQ.ToInt(0), KhoVN.ToInt(0), PTVC.ToInt(0), 5, 0, currency, 0, 0, 0, 0, 0, 0, "", currentDate, user_check.Username);
+
+                                if (tID.ToInt(0) > 0)
+                                {
+                                    TransportationOrderDetailController.InsertNew(tID.ToInt(0), ordertransaction, 0, "",
+                                    false, false, false, "0", "0", "", "", currentDate, user_check.Username);
+                                    TransportationOrderController.UpdatSale(tID.ToInt(0), SaleID, SaleName);
+
+                                    SmallPackageController.UpdateTransportationOrderID(checkcode.ID, tID.ToInt(0));
+                                    SmallPackageController.UpdateDateInVNWareHouse(checkcode.ID, user_check.Username, currentDate);
+                                    SmallPackageController.UpdateNotTemp(checkcode.ID);
+                                    SmallPackageController.UpdateStatus(checkcode.ID, 3, currentDate, user_check.Username);
+                                    SmallPackageController.UpdateInforUser(checkcode.ID, checkuser.ID, checkuser.Username, "");
+
+                                    var transportation = TransportationOrderController.GetByID(Convert.ToInt32(tID.ToInt(0)));
+                                    if (transportation != null)
+                                    {
+                                        int warehouseFrom = Convert.ToInt32(transportation.WarehouseFromID);
+                                        int warehouse = Convert.ToInt32(transportation.WarehouseID);
+                                        int shipping = Convert.ToInt32(transportation.ShippingTypeID);
+
+                                        var packages = SmallPackageController.GetByTransportationOrderID(transportation.ID);
+                                        if (packages.Count > 0)
+                                        {
+                                            var usercreate = AccountController.GetByID(Convert.ToInt32(transportation.UID));
+                                            double returnprice = 0;
+                                            double totalweight = 0;
+                                            double totalWeightTT = 0;
+                                            double pricePerWeight = 0;
+                                            double finalPriceOfPackage = 0;
+
+                                            foreach (var item in packages)
+                                            {
+                                                double weight = Convert.ToDouble(item.Weight);
+                                                double pDai = Convert.ToDouble(item.Length);
+                                                double pRong = Convert.ToDouble(item.Width);
+                                                double pCao = Convert.ToDouble(item.Height);
+                                                if (pDai > 0 && pRong > 0 && pCao > 0)
+                                                {
+                                                    totalWeightTT += (pDai * pRong * pCao) / 1000000;
+                                                }
+
+                                                totalweight += weight;
+
+                                            }
+
+                                            totalweight = Math.Round(totalweight, 2);
+                                            if (usercreate.FeeTQVNPerWeight.ToFloat(0) > 0)
+                                            {
+                                                pricePerWeight = Convert.ToDouble(usercreate.FeeTQVNPerWeight);
+                                                returnprice = totalweight * pricePerWeight;
+                                            }
+                                            else
+                                            {
+                                                if (totalweight > totalWeightTT)
+                                                {
+                                                    var fee = WarehouseFeeController.GetByAndWarehouseFromAndToWarehouseAndShippingTypeAndAndHelpMoving(
+                                                    warehouseFrom, warehouse, shipping, true);
+                                                    if (fee.Count > 0)
+                                                    {
+                                                        foreach (var f in fee)
+                                                        {
+                                                            if (totalweight > f.WeightFrom && totalweight <= f.WeightTo)
+                                                            {
+                                                                pricePerWeight = Convert.ToDouble(f.Price);
+                                                                returnprice = totalweight * Convert.ToDouble(f.Price);
+                                                                break;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    var fee = VolumeController.GetAllByFromWareHouseToWareHouse(warehouseFrom, warehouse, shipping, false);
+                                                    if (fee.Count > 0)
+                                                    {
+                                                        foreach (var f in fee)
+                                                        {
+                                                            if (totalWeightTT > f.VolumeFrom && totalWeightTT <= f.VolumeTo)
+                                                            {
+                                                                pricePerWeight = Convert.ToDouble(f.ValueVolume);
+                                                                returnprice = totalWeightTT * Convert.ToDouble(f.ValueVolume);
+                                                                break;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+
+                                            foreach (var item in packages)
+                                            {
+                                                double compareSize = 0;
+                                                double weight = Convert.ToDouble(item.Weight);
+                                                double pDai = Convert.ToDouble(item.Length);
+                                                double pRong = Convert.ToDouble(item.Width);
+                                                double pCao = Convert.ToDouble(item.Height);
+                                                if (pDai > 0 && pRong > 0 && pCao > 0)
+                                                {
+                                                    compareSize = (pDai * pRong * pCao) / 1000000;
+                                                }
+                                                if (weight >= compareSize)
+                                                {
+                                                    double TotalPriceCN = Math.Round(weight * pricePerWeight, 0);
+                                                    SmallPackageController.UpdateTotalPrice(item.ID, TotalPriceCN);
+                                                }
+                                                else
+                                                {
+                                                    double TotalPriceTT = Math.Round(compareSize * pricePerWeight, 0);
+                                                    SmallPackageController.UpdateTotalPrice(item.ID, TotalPriceTT);
+                                                }
+                                            }
+
+                                            finalPriceOfPackage = Math.Round(returnprice, 0);
+
+                                            double CheckProductFee = Convert.ToDouble(transportation.CheckProductFee);
+                                            double PackagedFee = Convert.ToDouble(transportation.PackagedFee);
+                                            double TotalCODTQVND = Convert.ToDouble(transportation.TotalCODTQVND);
+                                            double InsurranceFee = Convert.ToDouble(transportation.InsurranceFee);
+
+                                            double totalPriceVND = finalPriceOfPackage + CheckProductFee + PackagedFee + TotalCODTQVND + InsurranceFee;
+
+                                            double totalPriceCYN = 0;
+                                            totalPriceCYN = Math.Round(totalPriceVND / currency, 2);
+
+                                            var setNoti = SendNotiEmailController.GetByID(9);
+                                            if (setNoti != null)
+                                            {
+                                                var acc = AccountController.GetByID(transportation.UID.Value);
+                                                if (acc != null)
+                                                {
+                                                    if (setNoti.IsSentNotiUser == true)
+                                                    {
+                                                        NotificationsController.Inser(acc.ID,
+                                                              acc.Username, transportation.ID,
+                                                              "Đơn hàng vận chuyển hộ " + transportation.ID + " Hàng về kho VN.", 10,
+                                                              currentDate, user_check.Username, true);
+                                                    }
+
+                                                    if (setNoti.IsSendEmailUser == true)
+                                                    {
+                                                        try
+                                                        {
+                                                            PJUtils.SendMailGmail("MONAMEDIA", "mrurgljtizcfckzi",
+                                                                acc.Email, "Thông báo tại NHẬP HÀNG 558.",
+                                                                "Đơn hàng vận chuyển hộ " + transportation.ID + " Hàng về kho VN.", "");
+                                                        }
+                                                        catch { }
+                                                    }
+                                                }
+                                            }
+
+                                            TransportationOrderController.UpdateTotalWeightTotalPrice(transportation.ID, totalweight, totalWeightTT, totalPriceVND, currentDate, user_check.Username);
+                                            TransportationOrderController.UpdateFeeWeight(transportation.ID, finalPriceOfPackage, currentDate, user_check.Username);
+
+                                            return "ok";
+                                        }
+                                        else
+                                        {
+                                            return "none";
+                                        }
+                                    }
+                                    else
+                                    {
+                                        return "none";
+                                    }
+                                }
+                                else
+                                {
+                                    return "none";
+                                }
+                            }
+                            else
+                            {
+                                return "2";
+                            }
+                        }
+                        else
+                        {
+                            return "1";
+                        }
+                    }
+                    else
+                        return "none";
+                }
+                else
+                {
+                    return "none";
+                }
+            }
+            else
+            {
+                return "none";
+            }
+        }
+
+        [WebMethod]
+        public static string UpdateMuaHo(string ordertransaction, string Username, int MainOrderID)
+        {
+            if (HttpContext.Current.Session["userLoginSystem"] != null)
+            {
+                string username_current = HttpContext.Current.Session["userLoginSystem"].ToString();
+                tbl_Account ac = AccountController.GetByUsername(username_current);
+                DateTime currentDate = DateTime.UtcNow.AddHours(7);
+
+                int CheckRole = Convert.ToInt32(ac.RoleID);
+                if (CheckRole == 0 || CheckRole == 2 || CheckRole == 5)
+                {
+                    var checkcode = SmallPackageController.GetTroiNoi(ordertransaction);
+                    if (checkcode != null)
+                    {
+                        var checkuser = AccountController.GetByUsername(AccountController.GetByID(Convert.ToInt32(Username)).Username);
+                        if (checkuser != null)
+                        {
+                            var checkmo = MainOrderController.GetAllByUIDAndID(checkuser.ID, MainOrderID);
+                            if (checkmo != null)
+                            {
+                                SmallPackageController.UpdateMainOrderForIsTemp(checkcode.ID, checkuser.ID, checkuser.Username, MainOrderID, ac.Username, currentDate);
+                                SmallPackageController.UpdateDateInVNWareHouse(checkcode.ID, ac.Username, currentDate);
+                                SmallPackageController.UpdateStatus(checkcode.ID, 3, currentDate, ac.Username);
+                                HistoryOrderChangeController.Insert(MainOrderID, ac.ID, ac.Username, ac.Username +
+                                " đã thêm mã vận đơn của đơn hàng ID là: " + MainOrderID + ", Mã vận đơn: " + ordertransaction + "", 8, currentDate);
+
+                                if (checkmo.Status < 7)
+                                {
+                                    if (checkmo.DateVN == null)
+                                    {
+                                        MainOrderController.UpdateDateVN(checkmo.ID, currentDate);
+                                        MainOrderController.UpdateStatus(checkmo.ID, checkuser.ID, 7);
+                                        HistoryOrderChangeController.Insert(checkmo.ID, ac.ID, ac.Username, ac.Username +
+                                        " đã đổi trạng thái đơn hàng ID là: " + checkmo.ID + ", là: Hàng về kho VN", 8, currentDate);
+                                    }
+                                }
+
+                                int orderID = checkmo.ID;
+                                int warehouse = Convert.ToInt32(checkmo.ReceivePlace);
+                                int shipping = Convert.ToInt32(checkmo.ShippingType);
+                                int warehouseFrom = Convert.ToInt32(checkmo.FromPlace);
+                                var usercreate = AccountController.GetByID(Convert.ToInt32(checkmo.UID));
+
+                                int MainOrderCodeID = 0;
+                                var lMainOrderCode = MainOrderCodeController.GetAllByMainOrderID(MainOrderID);
+                                if (lMainOrderCode.Count > 0)
+                                {
+                                    MainOrderCodeID = lMainOrderCode[0].ID;
+                                }
+                                SmallPackageController.UpdateMainOrderCodeID(checkcode.ID, MainOrderCodeID);
+
+                                double FeeWeight = 0;
+                                double FeeWeightDiscount = 0;
+                                double ckFeeWeight = 0;
+                                double returnprice = 0;
+                                double pricePerWeight = 0;
+                                double totalweight = 0;
+                                ckFeeWeight = Convert.ToDouble(UserLevelController.GetByID(usercreate.LevelID.ToString().ToInt()).FeeWeight.ToString());
+
+                                var smallpackage = SmallPackageController.GetByMainOrderID(orderID);
+                                if (smallpackage.Count > 0)
+                                {
+                                    double totalWeight = 0;
+                                    foreach (var item in smallpackage)
+                                    {
+                                        double compareSize = 0;
+                                        double weight = Convert.ToDouble(item.Weight);
+                                        double pDai = Convert.ToDouble(item.Length);
+                                        double pRong = Convert.ToDouble(item.Width);
+                                        double pCao = Convert.ToDouble(item.Height);
+
+                                        if (pDai > 0 && pRong > 0 && pCao > 0)
+                                        {
+                                            compareSize = (pDai * pRong * pCao) / 6000;
+                                        }
+
+                                        if (weight >= compareSize)
+                                        {
+                                            totalWeight += Math.Round(weight, 1);
+                                        }
+                                        else
+                                        {
+                                            totalWeight += Math.Round(compareSize, 1);
+                                        }
+                                    }
+
+                                    totalweight = Math.Round(totalWeight, 2);
+
+                                    if (usercreate.FeeTQVNPerWeight.ToFloat(0) > 0)
+                                    {
+                                        pricePerWeight = Convert.ToDouble(usercreate.FeeTQVNPerWeight);
+                                        returnprice = totalweight * pricePerWeight;
+                                    }
+                                    else
+                                    {
+
+                                        var fee = WarehouseFeeController.GetByAndWarehouseFromAndToWarehouseAndShippingTypeAndAndHelpMoving(warehouseFrom, warehouse, shipping, false);
+                                        if (fee.Count > 0)
+                                        {
+                                            foreach (var f in fee)
+                                            {
+                                                if (totalWeight > f.WeightFrom && totalWeight <= f.WeightTo)
+                                                {
+                                                    pricePerWeight = Convert.ToDouble(f.Price);
+                                                    returnprice = totalWeight * Convert.ToDouble(f.Price);
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    foreach (var item in smallpackage)
+                                    {
+                                        double compareSize = 0;
+                                        double weight = Convert.ToDouble(item.Weight);
+                                        double pDai = Convert.ToDouble(item.Length);
+                                        double pRong = Convert.ToDouble(item.Width);
+                                        double pCao = Convert.ToDouble(item.Height);
+                                        if (pDai > 0 && pRong > 0 && pCao > 0)
+                                        {
+                                            compareSize = (pDai * pRong * pCao) / 6000;
+                                        }
+                                        if (weight >= compareSize)
+                                        {
+                                            double TotalPriceCN = weight * pricePerWeight;
+                                            TotalPriceCN = Math.Round(TotalPriceCN, 0);
+                                            SmallPackageController.UpdateTotalPrice(item.ID, TotalPriceCN);
+                                        }
+                                        else
+                                        {
+                                            double TotalPriceTT = compareSize * pricePerWeight;
+                                            TotalPriceTT = Math.Round(TotalPriceTT, 0);
+                                            SmallPackageController.UpdateTotalPrice(item.ID, TotalPriceTT);
+                                        }
+                                    }
+                                }
+
+                                double currency = Convert.ToDouble(checkmo.CurrentCNYVN);
+                                FeeWeight = Math.Round(returnprice, 0);
+                                FeeWeightDiscount = FeeWeight * ckFeeWeight / 100;
+                                FeeWeightDiscount = Math.Round(FeeWeightDiscount, 0);
+                                FeeWeight = FeeWeight - FeeWeightDiscount;
+                                FeeWeight = Math.Round(FeeWeight, 0);
+
+                                double FeeShipCN = Math.Round(Convert.ToDouble(checkmo.FeeShipCN), 0);
+                                double FeeBuyPro = Math.Round(Convert.ToDouble(checkmo.FeeBuyPro), 0);
+                                double IsCheckProductPrice = Math.Round(Convert.ToDouble(checkmo.IsCheckProductPrice), 0);
+                                double IsPackedPrice = Math.Round(Convert.ToDouble(checkmo.IsPackedPrice), 0);
+                                double IsFastDeliveryPrice = Math.Round(Convert.ToDouble(checkmo.IsFastDeliveryPrice), 0);
+                                double TotalFeeSupport = Math.Round(Convert.ToDouble(checkmo.TotalFeeSupport), 0);
+                                double InsuranceMoney = Math.Round(Convert.ToDouble(checkmo.InsuranceMoney), 0);
+                                double isfastprice = 0;
+                                if (checkmo.IsFastPrice.ToFloat(0) > 0)
+                                    isfastprice = Math.Round(Convert.ToDouble(checkmo.IsFastPrice), 0);
+                                double pricenvd = 0;
+                                if (checkmo.PriceVND.ToFloat(0) > 0)
+                                    pricenvd = Math.Round(Convert.ToDouble(checkmo.PriceVND), 0);
+                                double Deposit = Math.Round(Convert.ToDouble(checkmo.Deposit), 0);
+
+                                double TotalPriceVND = FeeShipCN + FeeBuyPro + FeeWeight + IsCheckProductPrice + IsPackedPrice
+                                             + IsFastDeliveryPrice + isfastprice + pricenvd + TotalFeeSupport + InsuranceMoney;
+                                TotalPriceVND = Math.Round(TotalPriceVND, 0);
+                                MainOrderController.UpdateFee(checkmo.ID, Deposit.ToString(), FeeShipCN.ToString(), FeeBuyPro.ToString(), FeeWeight.ToString(),
+                                           IsCheckProductPrice.ToString(), IsPackedPrice.ToString(), IsFastDeliveryPrice.ToString(), TotalPriceVND.ToString());
+                                MainOrderController.UpdateFeeWeightCK(checkmo.ID, FeeWeightDiscount.ToString(), ckFeeWeight.ToString());
+                                MainOrderController.UpdateTotalWeight(checkmo.ID, totalweight.ToString(), totalweight.ToString());
+
+                                var mainOrder = MainOrderController.GetByID(MainOrderID);
+                                int QuantityBarcode = mainOrder.QuantityBarcode ?? 0 + 1;
+                                string ListMVD = mainOrder.Barcode;
+                                ListMVD += ordertransaction + " | ";
+                                MainOrderController.UpdateBarcode(mainOrder.ID, ListMVD);
+                                MainOrderController.UpdateQuantityBarcode(mainOrder.ID, QuantityBarcode);
+
+                                return "ok";
+                            }
+                            else
+                            {
+                                return "1";
+                            }
+                        }
+                        else
+                        {
+                            return "2";
+                        }
+                    }
+                    return "none";
+                }
+                return "none";
+            }
+            return "none";
+        }
+
 
         [WebMethod]
         public static string loadinfo(string ID)
@@ -385,14 +949,6 @@ namespace NHST.manager
                 tbl_SmallPackage l = new tbl_SmallPackage();
                 l.ID = p.ID;
                 l.OrderTransactionCode = p.OrderTransactionCode;
-                l.Username = p.Username;
-                l.ReceiptPhone = p.ReceiptPhone;
-                l.ReceiptNotes = p.ReceiptNotes;
-                l.Quantity = p.Quantity;
-                l.ProductName = p.ProductName;
-                l.StaffNoteCheck = p.StaffNoteCheck;
-                l.StatusConfirm = p.StatusConfirm;
-                l.ListIMG = p.ListIMG;
                 return serializer.Serialize(l);
             }
             return serializer.Serialize(null);

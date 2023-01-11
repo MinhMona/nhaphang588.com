@@ -111,6 +111,15 @@ namespace NHST.Controllers
                 return lo;
             }
         }
+        public static tbl_MainOrderCode GetByCode(string code)
+        {
+            using (var dbe = new NHSTEntities())
+            {
+                tbl_MainOrderCode lo = new tbl_MainOrderCode();
+                lo = dbe.tbl_MainOrderCode.Where(o => o.MainOrderCode.Equals(code)).FirstOrDefault();
+                return lo;
+            }
+        }
 
         public static List<tbl_MainOrderCode> GetAllMainOrderCode(string MainOrderCode)
         {

@@ -1,4 +1,5 @@
 ﻿<%@ Page Title="Danh sách kiện trôi nổi" Language="C#" MasterPageFile="~/manager/adminMasterNew.Master" AutoEventWireup="true" CodeBehind="kien-troi-noi.aspx.cs" Inherits="NHST.manager.kien_troi_noi" %>
+
 <%@ Register Assembly="Telerik.Web.UI" Namespace="Telerik.Web.UI" TagPrefix="telerik" %>
 <%@ Import Namespace="NHST.Controllers" %>
 <%@ Import Namespace="NHST.Models" %>
@@ -140,78 +141,21 @@
         </div>
         <div class="modal-bd">
             <div class="row">
-                <div class="input-field col s12">
+                <div class="input-field col s12 m6">
                     <asp:TextBox runat="server" placeholder="" ID="pBarcode" type="text" Enabled="false" class="validate" data-type="text-only"></asp:TextBox>
                     <label class="active" for="edit__step-name">Mã vận đơn</label>
                 </div>
                 <div class="input-field col s12 m6">
-                    <asp:TextBox runat="server" placeholder="" ID="pUsername" type="text" Enabled="false" class="validate" data-type="text-only"></asp:TextBox>
-                    <label class="active" for="edit__step-name">Username</label>
+                    <asp:TextBox runat="server" placeholder="" ID="txtMainOrderCode" type="text" class="validate" data-type="text-only"></asp:TextBox>
+                    <label class="active" for="edit__step-name">Mã đơn hàng</label>
                 </div>
                 <div class="input-field col s12 m6">
-                    <asp:TextBox runat="server" placeholder="" ID="pUserPhone" type="text" Enabled="false" class="validate" data-type="text-only"></asp:TextBox>
-                    <label class="active" for="edit__step-number">Số điện thoại</label>
-                </div>
-                <div class="input-field col s12">
-                    <asp:TextBox runat="server" placeholder="" ID="pProductName" type="text" Enabled="false" class="validate" data-type="text-only"></asp:TextBox>
-                    <label class="active" for="edit__step-number">Tên sản phẩm</label>
-                </div>
-                <div class="input-field col s12">
-                    <asp:TextBox runat="server" placeholder="" ID="pQuantity" type="text" Enabled="false" class="validate" data-type="text-only"></asp:TextBox>
-                    <label class="active" for="edit__step-number">Số lượng</label>
-                </div>
-                <div class="input-field col s12">
-                    <asp:TextBox runat="server" placeholder="" ID="pNote" type="text" Enabled="false" class="validate" data-type="text-only"></asp:TextBox>
-                    <label class="active" for="edit__step-number">Khách hàng ghi chú</label>
-                </div>
-                <div class="col s12 m12" style="margin-top: 20px;">
-                    <span class="black-text">Hình ảnh</span>
-                    <div style="display: inline-block; margin-left: 15px;">
-                        <asp:FileUpload runat="server" ID="FileUpload1" class="upload-img" type="file" AllowMultiple="true" onchange="readFile(this)" title=""></asp:FileUpload>
-                        <a class="btn-upload">Upload</a>
-                    </div>
-                    <div class="preview-img" style="margin-bottom: 20px;">
-                    </div>
-                </div>
-                <div class="input-field col s12">
-                    <asp:TextBox runat="server" placeholder="" ID="pNoteStaff" type="text" TextMode="MultiLine" class="validate" data-type="text-only"></asp:TextBox>
-                    <label class="active" for="edit__step-number">Ghi chú nội bộ</label>
-                </div>
-                <%-- <div class="input-field col s12 m4">
-                    <asp:DropDownList runat="server" ID="ddlWarehouseTQ">
-                        <asp:ListItem Value="1">Kho Đông Hưng</asp:ListItem>
-                        <asp:ListItem Value="2">Kho Quảng Châu</asp:ListItem>
-                    </asp:DropDownList>
-                    <label for="mvc_detail-status">Kho TQ</label>
+                    <asp:TextBox runat="server" placeholder="" ID="txtUID" type="number" min="0" class="validate" data-type="text-only"></asp:TextBox>
+                    <label class="active" for="edit__step-number">Mã khách hàng</label>
                 </div>
 
-                <div class="input-field col s12 m4">
-                    <asp:DropDownList runat="server" ID="ddlWarehouseVN">
-                        <asp:ListItem Value="1">Kho Hà Nội</asp:ListItem>
-                        <asp:ListItem Value="7">Kho Hồ Chí Minh</asp:ListItem>
-                    </asp:DropDownList>
-                    <label for="mvc_detail-status">Kho VN</label>
-                </div>
 
-                <div class="input-field col s12 m4">
-                    <asp:DropDownList runat="server" ID="ddlShippingType">
-                        <asp:ListItem Value="1">Đi thường</asp:ListItem>
-                        <asp:ListItem Value="4">Đi nhanh</asp:ListItem>
-                        <asp:ListItem Value="5">Đi TMĐT</asp:ListItem>
-                        <asp:ListItem Value="6">Đi đặc biệt</asp:ListItem>
-                        <asp:ListItem Value="7">Line ưu tiên</asp:ListItem>
-                    </asp:DropDownList>
-                    <label for="mvc_detail-status">Hình thức VC</label>
-                </div>--%>
 
-                <div class="input-field col s12 m12">
-                    <asp:DropDownList runat="server" ID="ddlConfirm">
-                        <asp:ListItem Value="2">Chờ xác nhận</asp:ListItem>
-                        <asp:ListItem Value="3">Đã xác nhận</asp:ListItem>
-                        <asp:ListItem Value="1">Đã hủy</asp:ListItem>
-                    </asp:DropDownList>
-                    <label for="mvc_detail-status">Trạng thái xác nhận</label>
-                </div>
             </div>
         </div>
         <div class="modal-ft">
@@ -221,6 +165,88 @@
             </div>
         </div>
     </div>
+
+
+    <div id="addTroiNoiKyGui" class="modal modal-small add-package" style="height: 45vh">
+        <div class="modal-hd">
+            <span class="right"><i class="material-icons modal-close right-align">clear</i></span>
+            <h4 class="no-margin center-align">Gán kiện trôi nổi ký gửi</h4>
+        </div>
+        <div class="modal-bd">
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="BarcodeTransport" disabled type="text" placeholder="" class="validate" data-type="text-only">
+                    <label for="add_package_code">Mã kiện</label>
+                </div>
+
+                <div class="search-name input-field no-margin col s12 m6">
+                    <asp:DropDownList ID="ddlUsername1" runat="server" CssClass="select2-username2"
+                        DataValueField="ID" DataTextField="Username">
+                    </asp:DropDownList>
+                    <%-- <label for="add_package_code">Username</label>--%>
+                </div>
+
+                <div class="input-field col s12 m6">
+                    <asp:DropDownList runat="server" ID="ddlKhoTQ" AppendDataBoundItems="true" DataTextField="WareHouseName" DataValueField="ID">
+                    </asp:DropDownList>
+                    <label for="add_package_code">Kho TQ</label>
+                </div>
+
+                <div class="input-field col s12 m6">
+                    <asp:DropDownList runat="server" ID="ddlKhoVN" AppendDataBoundItems="true" DataTextField="WareHouseName" DataValueField="ID"></asp:DropDownList>
+                    <label for="add_package_code">Kho VN</label>
+                </div>
+
+                <div class="input-field col s12 m6">
+                    <asp:DropDownList runat="server" ID="ddlPTVC" AppendDataBoundItems="true" DataTextField="ShippingTypeName" DataValueField="ID"></asp:DropDownList>
+                    <label for="add_package_code">Phương thức VC</label>
+                </div>
+
+            </div>
+        </div>
+        <div class="modal-ft">
+            <div class="ft-wrap center-align">
+                <a href="javascript:;" onclick="AddTransport()" id="btn-update1" class="modal-action btn modal-close waves-effect waves-green mr-2 submit-button">Thêm</a>
+                <a href="javascript:;" class="modal-action btn orange darken-2 modal-close waves-effect waves-green ml-2">Hủy</a>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="addTroiNoiMuaHo" class="modal modal-small add-package" style="height: 45vh">
+        <div class="modal-hd">
+            <span class="right"><i class="material-icons modal-close right-align">clear</i></span>
+            <h4 class="no-margin center-align">Gán kiện trôi nổi mua hộ</h4>
+        </div>
+        <div class="modal-bd">
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="BarcodeOrder" disabled type="text" placeholder="" class="validate" data-type="text-only">
+                    <label for="add_package_code">Mã kiện</label>
+                </div>
+
+                <div class="search-name input-field no-margin col s12 m6">
+                    <asp:DropDownList ID="ddlUsername" runat="server" CssClass="select-username"
+                        DataValueField="ID" DataTextField="Username">
+                    </asp:DropDownList>
+                    <%--<label for="add_package_code">Username</label>--%>
+                </div>
+
+                <div class="input-field col s12 m6">
+                    <input id="MainOrderID" type="text" class="validate" placeholder="" data-type="text-only">
+                    <label for="add_package_code">ID đơn</label>
+                </div>
+            </div>
+        </div>
+        <div class="modal-ft">
+            <div class="ft-wrap center-align">
+                <a href="javascript:;" onclick="AddOrder()" id="btn-update2" class="modal-action btn modal-close waves-effect waves-green mr-2 submit-button">Thêm</a>
+                <a href="javascript:;" class="modal-action btn orange darken-2 modal-close waves-effect waves-green ml-2">Hủy</a>
+            </div>
+
+        </div>
+    </div>
+
     <asp:HiddenField runat="server" ID="hdfListIMG" />
     <asp:Button runat="server" ID="btnSearch" OnClick="btnSearch_Click" UseSubmitBehavior="false" Style="display: none" />
     <asp:Button runat="server" ID="buttonUpdate" OnClick="btncreateuser_Click" UseSubmitBehavior="false" Style="display: none" />
@@ -234,11 +260,7 @@
             }
         }
         function btnConfirm_Click(obj) {
-            var c = confirm('Xác nhận!!! ');
-            if (c == true) {
-                obj.removeAttr("onclick");
-                $('#<%=buttonUpBenefit.ClientID%>').click();
-            }
+            $('#<%=buttonUpBenefit.ClientID%>').click();
         }
         $('.search-action').click(function () {
             console.log($('#<%=search_name.ClientID%>').val());
@@ -320,13 +342,6 @@
                     if (data != null) {
                         $('#<%=lbID.ClientID%>').text(ID);
                         $('#<%=pBarcode.ClientID%>').val(data.OrderTransactionCode);
-                        $('#<%=pUsername.ClientID%>').val(data.Username);
-                        $('#<%=pUserPhone.ClientID%>').val(data.ReceiptPhone);
-                        $('#<%=pNote.ClientID%>').val(data.ReceiptNotes);
-                        $('#<%=pProductName.ClientID%>').val(data.ProductName);
-                        $('#<%=pQuantity.ClientID%>').val(data.Quantity);
-                        $('#<%=pNoteStaff.ClientID%>').val(data.StaffNoteCheck);
-                        $('#<%=ddlConfirm.ClientID%>').val(data.StatusConfirm);
                         $('#<%=hdfID.ClientID%>').val(data.ID);
                         var list = data.ListIMG;
                         if (list != null) {
@@ -400,6 +415,117 @@
                     k++;
                 }
             }
+        }
+
+        function GetbyTrancode(packageID) {
+            debugger;
+            $.ajax({
+                type: "POST",
+                url: "/manager/kien-troi-noi.aspx/GetpackageID",
+                data: "{packageID:" + packageID + "}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    if (msg.d != null) {
+                        var data = JSON.parse(msg.d);
+                        $("#BarcodeTransport").val(data.OrderTransactionCode);
+                        $("#btn-update1").attr('data-id', data.ID);
+                        $("#addTroiNoiKyGui").modal('open');
+                    }
+
+                }
+            })
+        }
+
+        function GetbyTrancodeOrder(packageID) {
+            debugger;
+            $.ajax({
+                type: "POST",
+                url: "/manager/kien-troi-noi.aspx/GetpackageID",
+                data: "{packageID:" + packageID + "}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    if (msg.d != null) {
+                        var data = JSON.parse(msg.d);
+                        $("#BarcodeOrder").val(data.OrderTransactionCode);
+                        $("#btn-update2").attr('data-id', data.ID);
+                        $("#addTroiNoiMuaHo").modal('open');
+                    }
+
+                }
+            })
+        }
+
+        function AddTransport() {
+
+            var username = $("#<%=ddlUsername1.ClientID%>").val();
+            var ordercode = $("#BarcodeTransport").val();
+            var khotq = $("#<%=ddlKhoTQ.ClientID%>").val();
+            var khovn = $("#<%=ddlKhoVN.ClientID%>").val();
+            var ptvc = $("#<%=ddlPTVC.ClientID%>").val();
+
+            $.ajax({
+                type: "POST",
+                url: "/manager/kien-troi-noi.aspx/UpdateKyGui",
+                data: "{ordertransaction:'" + ordercode + "',Username:'" + username + "',KhoTQ:'" + khotq + "',KhoVN:'" + khovn + "',PTVC:'" + ptvc + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    var ret = msg.d;
+                    if (ret != "none") {
+                        if (ret == "1") {
+                            alert('Kiện này đã xác định');
+                        }
+                        else if (ret == "2") {
+                            alert('Username khách không tồn tại');
+                        }
+                        else {
+                            alert('Gán kiện ký gửi thành công. Vui lòng check lại đơn hàng');
+                        }
+                    }
+                    removeLoading();
+                },
+                error: function (xmlhttprequest, textstatus, errorthrow) {
+                    alert(errorthrow);
+                    removeLoading();
+                }
+            });
+        }
+
+
+        function AddOrder() {
+
+            var username = $("#<%=ddlUsername.ClientID%>").val();
+            var mainorderID = $("#MainOrderID").val();
+            var ordercode = $("#BarcodeOrder").val();
+
+            $.ajax({
+                type: "POST",
+                url: "/manager/kien-troi-noi.aspx/UpdateMuaHo",
+                data: "{ordertransaction:'" + ordercode + "',Username:'" + username + "',MainOrderID:'" + mainorderID + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    var ret = msg.d;
+                    if (ret != "none") {
+                        if (ret == "1") {
+                            alert('Mã đơn không tồn tại theo khách hàng vừa chọn');
+                        }
+                        else if (ret == "2") {
+                            alert('Username khách không tồn tại');
+                        }
+                        else {
+                            alert('Gán kiện mua hộ thành công. Vui lòng check lại đơn hàng');
+                        }
+                    }
+                    removeLoading();
+                },
+                error: function (xmlhttprequest, textstatus, errorthrow) {
+                    alert(errorthrow);
+                    removeLoading();
+                }
+            });
         }
     </script>
 </asp:Content>

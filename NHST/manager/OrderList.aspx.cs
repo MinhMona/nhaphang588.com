@@ -36,16 +36,16 @@ namespace NHST.manager
                     {
                         if (ac.RoleID == 1)
                             Response.Redirect("/trang-chu");
-                    }  
+                    }
                     loadFilter();
                     LoadData();
                 }
             }
-        }        
+        }
 
         public void loadFilter()
         {
-            ddlStatus.SelectedValue = "-1";    
+            ddlStatus.SelectedValue = "-1";
             var stafforder = AccountController.GetAllByRoleID(3);
             ddlStaffOrder.Items.Clear();
             ddlStaffOrder.Items.Insert(0, new ListItem("Chọn nhân viên đặt hàng", "0"));
@@ -153,7 +153,7 @@ namespace NHST.manager
             }
             int st = 7;
             Response.Redirect("orderlist?ot=" + uID + "&st=" + st + "");
-        }       
+        }
         //đã thanh toán
         protected void btn9_Click(object sender, EventArgs e)
         {
@@ -175,7 +175,7 @@ namespace NHST.manager
             }
             int st = 10;
             Response.Redirect("orderlist?ot=" + uID + "&st=" + st + "");
-        }     
+        }
         //đã hủy
         protected void btn1_Click(object sender, EventArgs e)
         {
@@ -286,7 +286,7 @@ namespace NHST.manager
                     OrderType = Request.QueryString["ot"].ToInt(1);
                 }
                 if (OrderType > 0)
-                {                    
+                {
                     int total = 0;
                     var la = MainOrderController.GetOrderListFixed(Convert.ToInt32(ac.RoleID), Convert.ToInt32(ac.ID), OrderType, search, stype, fd, td, priceFrom, priceTo, st, staff, sale, Convert.ToBoolean(hasVMD), page, 20, mvd, mdh, sort);
                     if (la.Count > 0)
@@ -305,7 +305,7 @@ namespace NHST.manager
                     var stt6 = os.Where(o => o.Status == 6).ToList();
                     var stt7 = os.Where(o => o.Status == 7).ToList();
                     var stt9 = os.Where(o => o.Status == 9).ToList();
-                    var stt10 = os.Where(o => o.Status == 10).ToList();           
+                    var stt10 = os.Where(o => o.Status == 10).ToList();
                     if (Convert.ToInt32(ac.RoleID) == 3)
                     {
                         sttall = os.Where(o => o.DathangID == Convert.ToInt32(ac.ID)).ToList();
@@ -319,7 +319,7 @@ namespace NHST.manager
                         stt7 = os.Where(o => o.Status == 7 && o.DathangID == Convert.ToInt32(ac.ID)).ToList();
                         stt9 = os.Where(o => o.Status == 9 && o.DathangID == Convert.ToInt32(ac.ID)).ToList();
                         stt10 = os.Where(o => o.Status == 10 && o.DathangID == Convert.ToInt32(ac.ID)).ToList();
-                    }    
+                    }
                     else if (Convert.ToInt32(ac.RoleID) == 6)
                     {
                         sttall = os.Where(o => o.SalerID == Convert.ToInt32(ac.ID)).ToList();
@@ -333,7 +333,7 @@ namespace NHST.manager
                         stt7 = os.Where(o => o.Status == 7 && o.SalerID == Convert.ToInt32(ac.ID)).ToList();
                         stt9 = os.Where(o => o.Status == 9 && o.SalerID == Convert.ToInt32(ac.ID)).ToList();
                         stt10 = os.Where(o => o.Status == 10 && o.SalerID == Convert.ToInt32(ac.ID)).ToList();
-                    }    
+                    }
                     bttnAll.Text = "Tất cả (" + sttall.Count + ")";
                     btn0.Text = "Đơn mới (" + stt0.Count + ")";
                     btn1.Text = "Đơn hàng hủy (" + stt1.Count + ")";
@@ -344,7 +344,7 @@ namespace NHST.manager
                     btn6.Text = "Hàng về kho TQ (" + stt6.Count + ")";
                     btn7.Text = "Hàng về kho VN (" + stt7.Count + ")";
                     btn9.Text = "Đã thanh toán (" + stt9.Count + ")";
-                    btn10.Text = "Đã hoàn thành (" + stt10.Count + ")";                   
+                    btn10.Text = "Đã hoàn thành (" + stt10.Count + ")";
                 }
             }
         }
@@ -687,7 +687,7 @@ namespace NHST.manager
                 if (ToRow >= TotalItems)
                     ToRow = TotalItems - 1;
                 StringBuilder hcm = new StringBuilder();
-               
+
                 for (int i = 0; i < acs.Count; i++)
                 {
                     var item = acs[i];
@@ -703,6 +703,8 @@ namespace NHST.manager
                     hcm.Append("</td>");
 
                     hcm.Append("<td>" + item.Uname + "</td>");
+                    var acc = AccountController.GetByUsername(item.Uname);
+                    hcm.Append("<td>" + acc.ID + "</td>");
 
                     #region NV đặt hàng
                     hcm.Append("<td>");
@@ -750,10 +752,10 @@ namespace NHST.manager
                     #region mdh--mvd
                     hcm.Append("<td>");
                     hcm.Append("<div class=\"input-mvd\">");
-                    hcm.Append("<div class=\"row\">");     
-                    hcm.Append("<div class=\"col s6 \">");
+                    hcm.Append("<div class=\"row\">");
+                    hcm.Append("<div class=\"col s12 \">");
                     if (!string.IsNullOrEmpty(item.MainOrderCode))
-                    {                       
+                    {
                         hcm.Append("<span class=\"value\">" + item.MainOrderCode.Replace('|', ' ') + "</span>");
                     }
                     else
@@ -761,10 +763,14 @@ namespace NHST.manager
                         hcm.Append("<span class=\"value\"></span>");
                     }
                     hcm.Append("</div>");
-                    hcm.Append("<div class=\"col s6 \">");                    
+                    hcm.Append("</div>");
+                    hcm.Append("<br>");
+                    hcm.Append("<div class=\"row\">");
+                    hcm.Append("<div class=\"col s12 \">");
                     if (!string.IsNullOrEmpty(item.Barcode))
                     {
                         hcm.Append("<span class=\"value\">" + item.Barcode.Replace('|', ' ') + "</span>");
+                        hcm.Append("<br>");
                     }
                     else
                     {
@@ -780,7 +786,7 @@ namespace NHST.manager
                     hcm.Append("<td>");
                     hcm.Append(item.Cancel);
                     hcm.Append(item.Created);
-                    hcm.Append(item.DepostiDate);                   
+                    hcm.Append(item.DepostiDate);
                     hcm.Append(item.DateBuy);
                     hcm.Append(item.DateDelivery);
                     hcm.Append(item.DateTQ);

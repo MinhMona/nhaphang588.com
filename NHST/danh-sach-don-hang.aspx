@@ -239,6 +239,9 @@
                                                                     <th>Phần trăm
                                                                         <br />
                                                                         đặt cọc</th>
+                                                                    <th>Số tiền
+                                                                        <br />
+                                                                        còn lại</th>
                                                                     <th class="tb-date">Ngày đặt</th>
                                                                     <th>Trạng thái</th>
                                                                     <th>Thao tác</th>

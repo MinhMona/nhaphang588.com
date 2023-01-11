@@ -355,6 +355,7 @@ namespace NHST
                         html.Append("<td>" + string.Format("{0:N0}", Convert.ToDouble(item.AmountDeposit)) + "</td>");
                         html.Append("<td>" + string.Format("{0:N0}", Convert.ToDouble(item.Deposit)) + "</td>");
                         html.Append("<td>" + item.PercentDeposit + "</td>");
+                        html.Append("<td>" + string.Format("{0:N0}", Convert.ToDouble(item.TotalPriceVND) - Convert.ToDouble(item.Deposit)) + "</td>");
                         html.Append("<td>");
                         html.Append(item.Created);
                         html.Append(item.DepostiDate);
@@ -1095,7 +1096,7 @@ namespace NHST
             }
         }
 
-
+        [Serializable()]
         public class DepAll
         {
             public int MainOrderID { get; set; }
@@ -1103,12 +1104,14 @@ namespace NHST
             public double Total { get; set; }
         }
 
+        [Serializable()]
         public class PayAll
         {
             public int MainOrderID { get; set; }
             public double TotalPricePay { get; set; }
         }
 
+        [Serializable()]
         public class YCG
         {
             public int MainOrderID { get; set; }

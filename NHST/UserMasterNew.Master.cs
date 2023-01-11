@@ -132,7 +132,7 @@ namespace NHST
                     te = Math.Round(te, 2, MidpointRounding.AwayFromZero);
                     decimal tile = te * 100;
 
-                    string levelIconList = "";                   
+                    string levelIconList = "";
                     var userLevels = UserLevelController.GetAll("");
                     if (userLevels.Count > 0)
                     {
@@ -157,7 +157,7 @@ namespace NHST
                     if (!string.IsNullOrEmpty(acc.XuTichLuy))
                     {
                         TotalPrice = Convert.ToDouble(acc.XuTichLuy);
-                    }    
+                    }
 
                     //ltrHeaderLeft.Text += "<li class=\"hide-on-med-and-down\">";
                     //ltrHeaderLeft.Text += "<div class=\"proress\">";
@@ -169,12 +169,12 @@ namespace NHST
                     //ltrHeaderLeft.Text += "</div>";
                     //ltrHeaderLeft.Text += "</div>";
                     //ltrHeaderLeft.Text += "</li>";
-                   
+
                     ltrHeaderLeft.Text += "<li class=\"hide-on-med-and-down\"><a>¥1 = " + string.Format("{0:N0}", config.Currency) + " Đồng</a></li>";
                     ltrHeaderLeft.Text += "<li class=\"hide-on-med-and-down\"><a>Username: " + acc.Username + "</a></li>";
                     ltrHeaderLeft.Text += "<li class=\"hide-on-med-and-down\"><a>Số dư = " + string.Format("{0:N0}", acc.Wallet) + " Đồng</a></li>";
                     ltrHeaderLeft.Text += "<li class=\"hide-on-med-and-down\"><a class=\"waves-effect waves-block waves-light toggle-fullscreen\" href=\"javascript:void(0);\"><i class=\"material-icons\">settings_overscan</i></a></li>";
-                    
+
                     var noti = NotificationsController.GetAllTOP(acc.ID);
                     if (acc.RoleID != 1)
                     {
@@ -194,6 +194,7 @@ namespace NHST
                     ltrHeaderLeft.Text += "<div class=\"status__body\">";
                     ltrHeaderLeft.Text += "<div class=\"level\">";
                     ltrHeaderLeft.Text += "<div class=\"level\">";
+                    ltrHeaderLeft.Text += "<div class=\"level__info\"><p>ID</p><p class=\"rank\">" + acc.ID + "</p></div>";
                     ltrHeaderLeft.Text += "<div class=\"level__info\"><p>Level</p><p class=\"rank\">" + level + "</p></div>";
                     ltrHeaderLeft.Text += "<div class=\"level__process\"><span style=\"width: " + tile + "%\"></span></div>";
                     ltrHeaderLeft.Text += "</div>";

@@ -106,6 +106,10 @@ namespace NHST
                     ltrLogin.Text += "<div class=\"status__body\">";
                     ltrLogin.Text += "<div class=\"level\">";
                     ltrLogin.Text += "<div class=\"level__info\">";
+                    ltrLogin.Text += "<p>Mã tài khoản</p>";
+                    ltrLogin.Text += "<p class=\"rank\">" + acc.ID + "</p>";
+                    ltrLogin.Text += "</div>";
+                    ltrLogin.Text += "<div class=\"level__info\">";
                     ltrLogin.Text += "<p>Level</p>";
                     ltrLogin.Text += "<p class=\"rank\">" + level + "</p>";
                     ltrLogin.Text += "</div>";

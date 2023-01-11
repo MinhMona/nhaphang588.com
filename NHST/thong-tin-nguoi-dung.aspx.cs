@@ -75,6 +75,7 @@ namespace NHST
             {
                 int id = obj_user.ID;
                 ViewState["UID"] = id;
+                txtUserId.Text = id.ToString();
                 txtUsername.Text = username;
                 txtEmail.Text = obj_user.Email;
                 var ai = AccountInfoController.GetByUserID(id);
@@ -167,7 +168,7 @@ namespace NHST
         protected void btncreateuser_Click(object sender, EventArgs e)
         {
             string username = Session["userLoginSystem"].ToString();
-            var obj_user = AccountController.GetByUsername(username);          
+            var obj_user = AccountController.GetByUsername(username);
             int UID = ViewState["UID"].ToString().ToInt(0);
             string pass = txtpass.Text.Trim();
             string confirmpass = txtconfirmpass.Text.Trim();
@@ -198,7 +199,7 @@ namespace NHST
                 {
                     if (confirmpass == pass)
                     {
-                        string IMG = "";                       
+                        string IMG = "";
                         if (UpIMG.PostedFiles.Count > 0)
                         {
                             foreach (HttpPostedFile f in UpIMG.PostedFiles)
@@ -256,7 +257,7 @@ namespace NHST
             }
             else
             {
-                string IMG = "";               
+                string IMG = "";
                 if (UpIMG.PostedFiles.Count > 0)
                 {
                     foreach (HttpPostedFile f in UpIMG.PostedFiles)
@@ -297,16 +298,16 @@ namespace NHST
                 AccountInfoController.UpdateNew(UID, txtFirstName.Text.Trim(), txtLastName.Text.Trim(), txtPhone.Text,
                 txtAddress2.Text.Trim(), birthday, ddlGender.SelectedValue.ToInt(), "", "", DateTime.UtcNow.AddHours(7), txtUsername.Text);
                 checkpass = true;
-            }    
+            }
 
             if (checkemailbool == true)
             {
                 PJUtils.ShowMessageBoxSwAlert("Email này đã tồn tại trong hệ thống.", "i", true, Page);
-            }    
+            }
             else if (checkemailbool == false && checkpass == true)
             {
                 PJUtils.ShowMessageBoxSwAlert("Cập nhật thông tin thành công.", "s", true, Page);
-            }    
+            }
         }
     }
 }

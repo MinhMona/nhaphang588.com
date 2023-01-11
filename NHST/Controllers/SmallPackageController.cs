@@ -628,7 +628,7 @@ namespace NHST.Controllers
                 if (a != null)
                 {
                     a.IsTemp = false;
-                    a.IsHelpMoving = true;                   
+                    a.IsHelpMoving = true;
                     string kq = dbe.SaveChanges().ToString();
                     return kq;
                 }
@@ -1222,7 +1222,7 @@ namespace NHST.Controllers
                 double weight = 0;
                 if (reader["Weight"] != DBNull.Value)
                     weight = Convert.ToDouble(reader["Weight"]);
-                entity.Weight = Math.Round(weight, 1);              
+                entity.Weight = Math.Round(weight, 1);
 
                 if (reader["Volume"] != DBNull.Value)
                     entity.Volume = reader["Volume"].ToString().ToFloat(0);
@@ -1892,6 +1892,28 @@ namespace NHST.Controllers
                     a.UserPhone = null;
                     a.StaffNoteCheck = StaffNoteCheck;
                     a.StatusConfirm = StatusConfirm;
+                    a.ModifiedDate = ModifiedDate;
+                    a.ModifiedBy = ModifiedBy;
+                    dbe.Configuration.ValidateOnSaveEnabled = false;
+                    string kq = dbe.SaveChanges().ToString();
+                    return kq;
+                }
+                else
+                    return null;
+            }
+        }
+        public static string UpdateLost(int ID, int MainOrderID,int MainOrderCodeId, int UID, string Username, DateTime ModifiedDate, string ModifiedBy)
+        {
+            using (var dbe = new NHSTEntities())
+            {
+                tbl_SmallPackage a = dbe.tbl_SmallPackage.Where(ad => ad.ID == ID).FirstOrDefault();
+                if (a != null)
+                {
+                    a.Username = Username;
+                    a.MainOrderID = MainOrderID;
+                    a.MainOrderCodeID = MainOrderCodeId;
+                    a.UID = UID;
+                    a.IsTemp = false;
                     a.ModifiedDate = ModifiedDate;
                     a.ModifiedBy = ModifiedBy;
                     dbe.Configuration.ValidateOnSaveEnabled = false;

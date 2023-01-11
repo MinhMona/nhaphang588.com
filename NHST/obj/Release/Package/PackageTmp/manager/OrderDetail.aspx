@@ -89,6 +89,11 @@
                                     <table class="table   ">
                                         <tbody>
                                             <tr>
+                                                <td class="tb-date">Mã khách hàng</td>
+                                                <td>
+                                                    <asp:Literal ID="ltr_CustomerID" runat="server"></asp:Literal></td>
+                                            </tr>
+                                            <tr>
                                                 <td class="tb-date">Mã đơn hàng</td>
                                                 <td>
                                                     <asp:Literal ID="ltr_OrderID" runat="server"></asp:Literal></td>

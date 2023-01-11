@@ -141,76 +141,67 @@ namespace NHST.manager
         protected global::System.Web.UI.WebControls.TextBox pBarcode;
 
         /// <summary>
-        /// pUsername control.
+        /// txtMainOrderCode control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox pUsername;
+        protected global::System.Web.UI.WebControls.TextBox txtMainOrderCode;
 
         /// <summary>
-        /// pUserPhone control.
+        /// txtUID control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox pUserPhone;
+        protected global::System.Web.UI.WebControls.TextBox txtUID;
 
         /// <summary>
-        /// pProductName control.
+        /// ddlUsername1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox pProductName;
+        protected global::System.Web.UI.WebControls.DropDownList ddlUsername1;
 
         /// <summary>
-        /// pQuantity control.
+        /// ddlKhoTQ control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox pQuantity;
+        protected global::System.Web.UI.WebControls.DropDownList ddlKhoTQ;
 
         /// <summary>
-        /// pNote control.
+        /// ddlKhoVN control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox pNote;
+        protected global::System.Web.UI.WebControls.DropDownList ddlKhoVN;
 
         /// <summary>
-        /// FileUpload1 control.
+        /// ddlPTVC control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.FileUpload FileUpload1;
+        protected global::System.Web.UI.WebControls.DropDownList ddlPTVC;
 
         /// <summary>
-        /// pNoteStaff control.
+        /// ddlUsername control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox pNoteStaff;
-
-        /// <summary>
-        /// ddlConfirm control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlConfirm;
+        protected global::System.Web.UI.WebControls.DropDownList ddlUsername;
 
         /// <summary>
         /// hdfListIMG control.

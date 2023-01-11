@@ -1,4 +1,5 @@
 ﻿using MB.Extensions;
+using Microsoft.AspNet.SignalR.Hubs;
 using NHST.Bussiness;
 using NHST.Controllers;
 using NHST.Models;
@@ -59,21 +60,10 @@ namespace NHST.manager
                             List<PackageAll> palls = new List<PackageAll>();
                             PackageAll pa = new PackageAll();
                             pa.PackageAllType = 0;
-                            pa.PackageGetCount = packages.Count;
-                            List<OrderGet> og = new List<OrderGet>();
+                            pa.PackageGetCount = packages.Count; List<OrderGet> og = new List<OrderGet>();
                             foreach (var package in packages)
                             {
                                 OrderGet o = new OrderGet();
-
-                                //if (package.Status == 0)
-                                //{
-                                //    SmallPackageController.UpdateStatus(package.ID, 0, currentDate, username);
-                                //}
-                                //else
-                                //{
-                                //    SmallPackageController.UpdateStatus(package.ID, 2, currentDate, username);
-                                //    SmallPackageController.UpdateDateInTQWareHouse(package.ID, username, currentDate);
-                                //}
 
                                 var mainorder = MainOrderController.GetAllByID(Convert.ToInt32(package.MainOrderID));
                                 if (mainorder != null)
@@ -335,133 +325,111 @@ namespace NHST.manager
                             JavaScriptSerializer serializer = new JavaScriptSerializer();
                             return serializer.Serialize(bo);
                         }
-                        //else
-                        //{
-                        //    var listorders = MainOrderController.GetListByMainOrderCode(barcode);
-                        //    BigPackOut bo = new BigPackOut();
-                        //    bo.BigPackOutType = 1;
-                        //    if (listorders.Count > 0)
-                        //    {
-                        //        List<PackageAll> palls = new List<PackageAll>();
-                        //        foreach (var order in listorders)
-                        //        {
-                        //            #region Lấy tất cả các cục hiện có trong đơn
-                        //            int MainOrderID = order.ID;
-                        //            var smallpackages = SmallPackageController.GetByMainOrderID(MainOrderID);
-                        //            PackageAll pa = new PackageAll();
-                        //            pa.MainOrderID = MainOrderID;
-                        //            pa.PackageAllType = 1;
-                        //            pa.PackageGetCount = smallpackages.Count;
-                        //            List<OrderGet> og = new List<OrderGet>();
-                        //            if (smallpackages.Count > 0)
-                        //            {
-                        //                foreach (var s in smallpackages)
-                        //                {
-                        //                    OrderGet o = new OrderGet();
+                        else
+                        {
+                            //Thêm mã vận đơn vào kiện trôi nổi
+                            int MainOrderID = 0;
+                            string temp = "";
+                            if (!string.IsNullOrEmpty(barcode))
+                                temp = barcode;
+                            else
+                                temp = "00-" + PJUtils.GetRandomStringByDateTime();
 
-                        //                    int UID = 0;
-                        //                    string Phone = "";
-                        //                    string Username = "";
+                            var getsmallcheck = SmallPackageController.GetByOrderCode(temp);
+                            if (getsmallcheck.Count > 0)
+                            {
+                                return "existsmallpackage";
+                            }
+                            else
+                            {
+                                string packageID = SmallPackageController.InsertWithMainOrderIDAndIsTemp(MainOrderID,
+                                0, temp, "", 0, 0, 0, 2, true, 0, DateTime.UtcNow.AddHours(7), username);
+                                //SmallPackageController.UpdateUserPhoneAndUsername(Convert.ToInt32(packageID), username, UserPhone);
+                                //SmallPackageController.UpdateNote(Convert.ToInt32(packageID), Description);
+                                var package = SmallPackageController.GetByID(Convert.ToInt32(packageID));
 
-                        //                    var userorder = AccountController.GetByID(order.UID.Value);
-                        //                    if (userorder != null)
-                        //                    {
-                        //                        UID = userorder.ID;
-                        //                        Phone = AccountInfoController.GetByUserID(userorder.ID).Phone;
-                        //                        username = userorder.Username;
-                        //                    }
+                                BigPackOut bo = new BigPackOut();
+                                bo.BigPackOutType = 0;
+                                List<PackageAll> palls = new List<PackageAll>();
+                                PackageAll pa = new PackageAll();
+                                pa.PackageAllType = 0;
+                                pa.PackageGetCount = 1;
 
-                        //                    o.UID = UID;
-                        //                    o.Phone = Phone;
-                        //                    o.Username = username;
+                                List<OrderGet> og = new List<OrderGet>();
+                                int UID = 0;
+                                string Phone = "N/A";
+                                string Username = "N/A";
+                                OrderGet o = new OrderGet();
+                                o.UID = UID;
+                                o.Phone = Phone;
+                                o.Username = Username;
+                                o.ID = package.ID;
+                                o.BigPackageID = Convert.ToInt32(package.BigPackageID);
+                                o.BarCode = package.OrderTransactionCode;
+                                o.TotalWeight = Math.Round(Convert.ToDouble(package.Weight), 1).ToString();
+                                o.Status = 2;
+                                o.MainorderID = 0;
+                                o.IMG = package.ListIMG;
+                                o.TransportationID = 0;
+                                o.OrderType = "Chưa xác định";
+                                o.OrderTypeInt = 3;
+                                o.OrderShopCode = "";
+                                o.Soloaisanpham = "";
+                                o.Soluongsanpham = "";
+                                o.Kiemdem = "Không";
+                                o.Donggo = "Không";
+                                o.Baohiem = "Không";
 
-                        //                    o.OrderType = "Đơn hàng mua hộ";
-                        //                    o.OrderTypeInt = 1;
-                        //                    o.ID = s.ID;
-                        //                    o.BigPackageID = Convert.ToInt32(s.BigPackageID);
-                        //                    o.BarCode = s.OrderTransactionCode;
-                        //                    o.TotalWeight = Math.Round(Convert.ToDouble(s.Weight), 1).ToString();
-                        //                    o.Status = Convert.ToInt32(s.Status);
-                        //                    int mainOrderID = Convert.ToInt32(MainOrderID);
-                        //                    o.MainorderID = mainOrderID;
-                        //                    o.TransportationID = 0;
-                        //                    o.OrderShopCode = order.MainOrderCode;
+                                if (!string.IsNullOrEmpty(package.UserNote))
+                                    o.Khachghichu = package.UserNote;
+                                else
+                                    o.Khachghichu = string.Empty;
 
-                        //                    var orders = OrderController.GetByMainOrderID(MainOrderID);
-                        //                    o.Soloaisanpham = orders.Count.ToString();
-                        //                    double totalProductQuantity = 0;
-                        //                    if (orders.Count > 0)
-                        //                    {
-                        //                        foreach (var p in orders)
-                        //                        {
-                        //                            totalProductQuantity += Convert.ToDouble(p.quantity);
-                        //                        }
-                        //                    }
-                        //                    o.Soluongsanpham = totalProductQuantity.ToString();
-                        //                    if (order.IsCheckProduct == true)
-                        //                        o.Kiemdem = "Có";
-                        //                    else
-                        //                        o.Kiemdem = "Không";
-                        //                    if (order.IsPacked == true)
-                        //                        o.Donggo = "Có";
-                        //                    else
-                        //                        o.Donggo = "Không";
-                        //                    o.Baohiem = "Không";
+                                if (!string.IsNullOrEmpty(package.Description))
+                                    o.Note = package.Description;
+                                else
+                                    o.Note = string.Empty;
 
-                        //                    if (!string.IsNullOrEmpty(s.UserNote))
-                        //                        o.Khachghichu = s.UserNote;
-                        //                    else
-                        //                        o.Khachghichu = string.Empty;
+                                o.Loaisanpham = package.ProductType;
 
-                        //                    if (!string.IsNullOrEmpty(s.Description))
-                        //                        o.Note = s.Description;
-                        //                    else
-                        //                        o.Note = string.Empty;
-                        //                    o.Loaisanpham = s.ProductType;
+                                if (!string.IsNullOrEmpty(package.StaffNoteCheck))
+                                    o.NVKiemdem = package.StaffNoteCheck;
+                                else
+                                    o.NVKiemdem = string.Empty;
 
-                        //                    if (!string.IsNullOrEmpty(s.StaffNoteCheck))
-                        //                        o.NVKiemdem = s.StaffNoteCheck;
-                        //                    else
-                        //                        o.NVKiemdem = string.Empty;
+                                var listb = BigPackageController.GetAllWithStatus(1);
+                                if (listb.Count > 0)
+                                {
+                                    o.ListBig = listb;
+                                }
+                                o.IsTemp = 0;
+                                double dai = 0;
+                                double rong = 0;
+                                double cao = 0;
+                                if (package.Length != null)
+                                {
+                                    dai = Convert.ToDouble(package.Length);
+                                }
+                                if (package.Width != null)
+                                {
+                                    rong = Convert.ToDouble(package.Width);
+                                }
+                                if (package.Height != null)
+                                {
+                                    cao = Convert.ToDouble(package.Height);
+                                }
+                                o.dai = dai;
+                                o.rong = rong;
+                                o.cao = cao;
+                                og.Add(o);
 
-                        //                    var listb = BigPackageController.GetAllWithStatus(1);
-                        //                    if (listb.Count > 0)
-                        //                    {
-                        //                        o.ListBig = listb;
-                        //                    }
-                        //                    o.IsTemp = 0;
-                        //                    double dai = 0;
-                        //                    double rong = 0;
-                        //                    double cao = 0;
-                        //                    if (s.Length != null)
-                        //                    {
-                        //                        dai = Convert.ToDouble(s.Length);
-                        //                    }
-                        //                    if (s.Width != null)
-                        //                    {
-                        //                        rong = Convert.ToDouble(s.Width);
-                        //                    }
-                        //                    if (s.Height != null)
-                        //                    {
-                        //                        cao = Convert.ToDouble(s.Height);
-                        //                    }
-                        //                    o.dai = dai;
-                        //                    o.rong = rong;
-                        //                    o.cao = cao;
-                        //                    o.IMG = s.ListIMG;
-                        //                    og.Add(o);
-                        //                }
-                        //            }
-                        //            #endregion                                    
-                        //            pa.listPackageGet = og;
-                        //            palls.Add(pa);
-
-                        //        }
-                        //        bo.Pall = palls;
-                        //        JavaScriptSerializer serializer = new JavaScriptSerializer();
-                        //        return serializer.Serialize(bo);
-                        //    }
-                        //}
+                                pa.listPackageGet = og;
+                                palls.Add(pa);
+                                bo.Pall = palls;
+                                JavaScriptSerializer serializer = new JavaScriptSerializer();
+                                return serializer.Serialize(bo);
+                            }
+                        }
                     }
                 }
             }
@@ -479,6 +447,11 @@ namespace NHST.manager
                 double quantt = 0;
                 if (quantity.ToFloat(0) > 0)
                     quantt = Math.Round(Convert.ToDouble(quantity), 5);
+                //Cập nhật cân 0.5
+                if (quantt < 0.5)
+                {
+                    quantt = 0.5;
+                }
                 DateTime currentDate = DateTime.UtcNow.AddHours(7);
 
                 if (status == 0)
@@ -632,6 +605,9 @@ namespace NHST.manager
                                     totalWeight += totalWeightTT;
                                 }
                             }
+                            //Cập nhật cân 0.5
+                            if (totalWeight < 0.5)
+                                totalWeight = 0.5;
                             totalWeight = Math.Round(totalWeight, 5);
                             if (!string.IsNullOrEmpty(usercreate.FeeTQVNPerWeight))
                             {
@@ -779,8 +755,8 @@ namespace NHST.manager
 
                                     totalweight += totalWeightCN;
                                 }
-                            }                    
-                            
+                            }
+
                             double returnprice = 0;
                             double returnpricecn = 0;
                             double returnpricett = 0;
@@ -798,7 +774,7 @@ namespace NHST.manager
                             {
                                 var feecn = WarehouseFeeController.GetByAndWarehouseFromAndToWarehouseAndShippingTypeAndAndHelpMoving(warehouseFrom, warehouse, shipping, true);
                                 if (feecn.Count > 0)
-                                {                                   
+                                {
                                     foreach (var f in feecn)
                                     {
                                         if (totalweight > f.WeightFrom && totalweight <= f.WeightTo)
@@ -808,11 +784,11 @@ namespace NHST.manager
                                             break;
                                         }
                                     }
-                                }                                
+                                }
                             }
                             var feett = VolumeController.GetAllByFromWareHouseToWareHouse(warehouseFrom, warehouse, shipping, true);
                             if (feett.Count > 0)
-                            {                               
+                            {
                                 foreach (var f in feett)
                                 {
                                     if (totalWeightTT > f.VolumeFrom && totalWeightTT <= f.VolumeTo)
@@ -821,17 +797,17 @@ namespace NHST.manager
                                         returnpricett = totalWeightTT * pricePerTT;
                                         break;
                                     }
-                                }                                
+                                }
                             }
 
                             if (returnpricett > returnpricecn)
                             {
                                 returnprice = returnpricett;
-                            }    
+                            }
                             else
                             {
                                 returnprice = returnpricecn;
-                            }    
+                            }
 
                             foreach (var item in packages)
                             {
@@ -841,22 +817,22 @@ namespace NHST.manager
 
                                 double weight = Math.Round(Convert.ToDouble(item.Weight), 5);
                                 compareweight = Math.Round(weight * pricePerWeight, 0);
-                               
+
                                 double pDai = Convert.ToDouble(item.Length);
                                 double pRong = Convert.ToDouble(item.Width);
                                 double pCao = Convert.ToDouble(item.Height);
 
-                                if (pDai > 0 && pRong > 0 && pCao > 0)                                
-                                    weigthTT = (pDai * pRong * pCao) / 1000000;                                
+                                if (pDai > 0 && pRong > 0 && pCao > 0)
+                                    weigthTT = (pDai * pRong * pCao) / 1000000;
 
                                 compareSize = Math.Round(weigthTT * pricePerTT, 0);
 
                                 if (compareweight >= compareSize)
-                                {                                
+                                {
                                     SmallPackageController.UpdateTotalPrice(item.ID, compareweight);
                                 }
                                 else
-                                {                                    
+                                {
                                     SmallPackageController.UpdateTotalPrice(item.ID, compareSize);
                                 }
                             }
@@ -909,7 +885,7 @@ namespace NHST.manager
                                         }
                                     }
                                 }
-                            }                                
+                            }
                             return "1";
                         }
                         else
@@ -1427,16 +1403,7 @@ namespace NHST.manager
                                             o.MainorderID = mainOrderID;
                                             o.TransportationID = 0;
                                             o.OrderShopCode = "";
-                                            //var orders = OrderController.GetByMainOrderID(MainOrderID);
 
-                                            //double totalProductQuantity = 0;
-                                            //if (orders.Count > 0)
-                                            //{
-                                            //    foreach (var p in orders)
-                                            //    {
-                                            //        totalProductQuantity += Convert.ToDouble(p.quantity);
-                                            //    }
-                                            //}
                                             o.Soloaisanpham = "0";
                                             o.Soluongsanpham = "0";
                                             o.Kiemdem = "Không";

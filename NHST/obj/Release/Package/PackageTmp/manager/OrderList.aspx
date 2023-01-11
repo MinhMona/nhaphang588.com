@@ -209,40 +209,45 @@
                                         sản phẩm</th>
                                     <th>Thông tin</th>
                                     <th>Username</th>
+                                    <th>UserID</th>
                                     <th style="min-width: 100px;">Nhân viên
                                         <br />
                                         đặt hàng</th>
                                     <th style="min-width: 120px;">Nhân viên
                                         <br />
                                         kinh doanh</th>
-                                    <th>Mã đơn hàng - Mã vận đơn<br />
+                                    <th>Mã đơn hàng
+                                        <br />
+                                        Mã vận đơn<br />
                                         <div class="search-th">
                                             <div class="row">
-                                                <div class="col s6 pr-0">
+                                                <div class="col s12 pr-0">
                                                     <asp:TextBox runat="server" onkeypress="searchMHD()" placeholder="Lọc mã đơn hàng" ID="txtSearchMDH"></asp:TextBox>
                                                 </div>
-                                                <div class="col s6 pl-0">
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s12 pl-0">
                                                     <asp:TextBox runat="server" onkeypress="searchMVD()" placeholder="Lọc mã vận đơn" ID="txtSearchMVD"></asp:TextBox>
                                                 </div>
                                             </div>
                                         </div>
-                                    </th>
+                                        </th>
                                     <th style="min-width: 100px;">Trạng thái</th>
-                                    <th style="min-width: 100px;">Thao tác</th>
-                                </tr>
+                    <th style="min-width: 100px;">Thao tác</th>
+                    </tr>
                             </thead>
                             <tbody>
                                 <asp:Literal ID="ltr" runat="server" EnableViewState="false"></asp:Literal>
                             </tbody>
-                        </table>
-                    </div>
-                    <div class="pagi-table float-right mt-2">
-                        <%this.DisplayHtmlStringPaging1();%>
-                    </div>
-                    <div class="clearfix"></div>
+                    </table>
                 </div>
+                <div class="pagi-table float-right mt-2">
+                    <%this.DisplayHtmlStringPaging1();%>
+                </div>
+                <div class="clearfix"></div>
             </div>
         </div>
+    </div>
     </div>
     <asp:HiddenField ID="hdfStatus" runat="server" Value="-1" />
     <asp:HiddenField ID="hdfStaffID" runat="server" />

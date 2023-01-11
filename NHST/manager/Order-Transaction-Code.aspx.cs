@@ -13,6 +13,7 @@ using System.Data;
 using System.Text;
 using MB.Extensions;
 using System.Text.RegularExpressions;
+using System.Web.Services;
 
 namespace NHST.manager
 {
@@ -112,7 +113,7 @@ namespace NHST.manager
                 StringBuilder hcm = new StringBuilder();
                 for (int i = 0; i < acs.Count; i++)
                 {
-                    var item = acs[i];                  
+                    var item = acs[i];
                     hcm.Append("<tr>");
                     hcm.Append("<td>" + item.ID + "</td>");
                     hcm.Append("<td>" + item.BigPackage + "</td>");
@@ -138,6 +139,7 @@ namespace NHST.manager
                     {
                         hcm.Append("<a href=\"transportationdetail.aspx?id=" + item.TransportationOrderID + "\" target=\"_blank\" data-position=\"top\"><i class=\"material-icons\">edit</i><span>Xem</span></a>");
                     }
+                    hcm.Append("<a href=\"javascript:;\" onclick=\"deleteSmallPackage('" + item.ID + "')\" class=\"btn-delete tooltipped\" data-position=\"top\" data-tooltip=\"Xóa mã vận đơn này\"><i class=\"material-icons material-fix-delete\">delete</i></a>");
                     hcm.Append("</div>");
                     hcm.Append("</td>");
                     hcm.Append("</tr>");
@@ -441,6 +443,23 @@ namespace NHST.manager
             Response.Flush();
             //Response.Close();
             Response.End();
+        }
+
+        [WebMethod]
+        public static string deleteSmallPackage(string ID)
+        {
+            var smallPackage = SmallPackageController.GetByID(Convert.ToInt32(ID));
+            string kq = SmallPackageController.Delete(Convert.ToInt32(ID));
+            if (kq != null)
+            {
+                string username_current = HttpContext.Current.Session["userLoginSystem"].ToString();
+                var accChangeData = AccountController.GetByUsername(username_current);
+                DateTime currentDate = DateTime.UtcNow.AddHours(7);
+                var mainorder = MainOrderController.GetByID(smallPackage.MainOrderID ?? 0);
+                HistoryOrderChangeController.Insert(mainorder.ID, accChangeData.ID, accChangeData.Username, accChangeData.Username +
+                                " đã xóa mã vận đơn: <strong>" + smallPackage.OrderTransactionCode + "</strong> của đơn hàng ID là: " + mainorder.ID, 8, currentDate);
+            }
+            return kq;
         }
     }
 }

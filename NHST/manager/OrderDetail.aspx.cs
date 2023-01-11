@@ -722,6 +722,7 @@ namespace NHST.manager
                             hdfFeeBuyProDiscount.Value = "0";
                             hdfFeeWeightDiscount.Value = "0";
                         }
+                        ltr_CustomerID.Text += "<strong>" + o.UID + "</strong>";
                         ltr_OrderID.Text += "<strong>" + o.ID + "</strong>";
                         StringBuilder customerInfo = new StringBuilder();
 

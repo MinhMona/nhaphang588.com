@@ -3882,7 +3882,8 @@
             pwa.document.open();
             pwa.document.write(VoucherSourcetoPrint(source));
             pwa.document.close();
-        }
+        }
+
         function printBarcode(barcode) {
             //var barcode = "12341234-4123412342134";
             console.log(barcode);

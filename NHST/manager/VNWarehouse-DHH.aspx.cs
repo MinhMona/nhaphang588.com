@@ -13,6 +13,7 @@ using System.Web.Script.Serialization;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Telerik.Web.UI.Gantt;
 
 namespace NHST.manager
 {
@@ -545,13 +546,18 @@ namespace NHST.manager
            int packageID, double dai, double rong, double cao, string base64, string note,
            string nvkiemdem, string khachghichu, string loaisanpham)
         {
-            string username_current = HttpContext.Current.Session["userLoginSystem"].ToString();  
+            string username_current = HttpContext.Current.Session["userLoginSystem"].ToString();
             var package = SmallPackageController.GetByID(packageID);
             if (package != null)
-            {                
+            {
                 double quantityT = 0;
                 if (quantity.ToFloat(0) > 0)
                     quantityT = Math.Round(Convert.ToDouble(quantity), 5);
+                //Cập nhật cân 0.5
+                if (quantityT < 0.5)
+                {
+                    quantityT = 0.5;
+                }
                 DateTime currentDate = DateTime.UtcNow.AddHours(7);
 
                 if (status == 0)
@@ -668,7 +674,7 @@ namespace NHST.manager
                     {
                         var big = BigPackageController.GetByID(bID);
                         if (big != null)
-                        {                           
+                        {
                             var smalls = SmallPackageController.GetBuyBigPackageID(bID, "");
                             if (smalls.Count > 0)
                             {
@@ -717,6 +723,9 @@ namespace NHST.manager
                                     totalWeight += totalWeightTT;
                                 }
                             }
+                            //Cập nhật cân 0.5
+                            if (totalWeight < 0.5)
+                                totalWeight = 0.5;
                             totalWeight = Math.Round(totalWeight, 5);
                             if (!string.IsNullOrEmpty(usercreate.FeeTQVNPerWeight))
                             {
@@ -870,7 +879,7 @@ namespace NHST.manager
                                     var staff = StaffIncomeController.GetByMainOrderIDUID(mo.ID, saleID);
                                     if (staff != null)
                                     {
-                                        int rStaffID = staff.ID;                                       
+                                        int rStaffID = staff.ID;
                                         if (staff.Status == 1)
                                         {
                                             salerName = sale.Username;
@@ -908,7 +917,7 @@ namespace NHST.manager
                                             CreatedDate, currentDate, username_current);
                                         }
                                     }
-                                }                                 
+                                }
                             }
                             if (dathangID > 0)
                             {
@@ -949,7 +958,7 @@ namespace NHST.manager
                                     }
                                 }
                             }
-                        }                       
+                        }
 
                         return "1";
                     }

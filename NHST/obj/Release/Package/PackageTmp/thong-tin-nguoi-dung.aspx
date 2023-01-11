@@ -29,6 +29,10 @@
                                                             <asp:Label ID="lblError" runat="server" EnableViewState="false" ForeColor="Red" Visible="false"></asp:Label>
                                                         </div>
                                                         <div class="input-field col s12 m6">
+                                                            <asp:TextBox runat="server" ID="txtUserId" Enabled="false"></asp:TextBox>
+                                                            <label for="username">Mã tài khoản</label>
+                                                        </div>
+                                                        <div class="input-field col s12 m6">
                                                             <asp:TextBox runat="server" ID="txtUsername" Enabled="false"></asp:TextBox>
                                                             <label for="username">Tên đăng nhập</label>
                                                         </div>

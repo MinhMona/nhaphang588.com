@@ -111,7 +111,8 @@ namespace NHST.manager
                 ViewState["UID"] = id;
                 var a = AccountController.GetByID(id);
                 if (a != null)
-                {          
+                {
+                    txtUID.Text = a.ID.ToString();
                     txtUsername.Text = a.Username;
                     txtEmail.Text = a.Email;
                     var ai = AccountInfoController.GetByUserID(id);

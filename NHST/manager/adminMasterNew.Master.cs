@@ -156,10 +156,10 @@ namespace NHST.manager
                         html.Append("</li>");
                         html.Append("<li class=\"bold\"><a class=\"waves-effect waves-cyan \" href=\"/manager/Order-Transaction-Code\"><i class=\"material-icons\">store</i><span class=\"menu-title\">Quản lý mã vận đơn</span></a>");
                         html.Append("</li>");
-                        html.Append("<li class=\"bold\"><a class=\"waves-effect waves-cyan \" href=\"/manager/kien-troi-noi\"><i class=\"material-icons\">store</i><span class=\"menu-title\">Kiện trôi nổi</span></a>");
+                        html.Append("<li class=\"bold\"><a class=\"waves-effect waves-cyan \" href=\"/manager/kien-troi-noi\"><i class=\"material-icons\">store</i><span class=\"menu-title\">Hàng thất lạc</span></a>");
                         html.Append("</li>");
-                        html.Append("<li class=\"bold\"><a class=\"waves-effect waves-cyan \" href=\"/manager/kien-that-lac\"><i class=\"material-icons\">store</i><span class=\"menu-title\">Kiện thất lạc</span></a>");
-                        html.Append("</li>");                        
+                        //html.Append("<li class=\"bold\"><a class=\"waves-effect waves-cyan \" href=\"/manager/kien-that-lac\"><i class=\"material-icons\">store</i><span class=\"menu-title\">Kiện thất lạc</span></a>");
+                        //html.Append("</li>");                        
 
                         //html.Append("<li class=\"navigation-header\"><a class=\"navigation-header-text\">Ký gửi</a><i class=\"navigation-header-icon material-icons\">more_horiz</i>");
                         //html.Append("<li class=\"bold\"><a class=\"collapsible-header waves-effect waves-cyan \" href=\"javascript:;\"><i class=\"material-icons\">library_books</i><span class=\"menu-title\">Ký gửi</span></a>");
@@ -361,8 +361,8 @@ namespace NHST.manager
                         //html.Append("<li><a class=\"collapsible-body\" href =\"/manager/import_smallpackage\"><i class=\"material-icons\">radio_button_unchecked</i><span>Import mã vận đơn</span></a></li>");
                         //html.Append("</li>");
                         html.Append("<li><a class=\"collapsible-body\" href=\"/manager/Order-Transaction-Code\"><i class=\"material-icons\">radio_button_unchecked</i><span>Quản lý mã vận đơn</span></a></li>");
-                        html.Append("<li><a class=\"collapsible-body\" href=\"/manager/kien-that-lac\"><i class=\"material-icons\">radio_button_unchecked</i><span>Kiện thất lạc</span></a></li>");
-                        html.Append("<li><a class=\"collapsible-body\" href=\"/manager/kien-troi-noi\"><i class=\"material-icons\">radio_button_unchecked</i><span>Kiện trôi nổi</span></a></li>");
+                        //html.Append("<li><a class=\"collapsible-body\" href=\"/manager/kien-that-lac\"><i class=\"material-icons\">radio_button_unchecked</i><span>Kiện thất lạc</span></a></li>");
+                        html.Append("<li><a class=\"collapsible-body\" href=\"/manager/kien-troi-noi\"><i class=\"material-icons\">radio_button_unchecked</i><span>Hàng thất lạc</span></a></li>");
                         html.Append("</ul>");
                         html.Append("</div>");
                         html.Append("</li>");
@@ -452,10 +452,10 @@ namespace NHST.manager
                         html.Append("</li>");
                         html.Append("<li class=\"bold\"><a class=\"waves-effect waves-cyan \" href=\"/manager/Order-Transaction-Code\"><i class=\"material-icons\">store</i><span class=\"menu-title\">Quản lý mã vận đơn</span></a>");
                         html.Append("</li>");
-                        html.Append("<li class=\"bold\"><a class=\"waves-effect waves-cyan \" href=\"/manager/kien-troi-noi\"><i class=\"material-icons\">store</i><span class=\"menu-title\">Kiện trôi nổi</span></a>");
+                        html.Append("<li class=\"bold\"><a class=\"waves-effect waves-cyan \" href=\"/manager/kien-troi-noi\"><i class=\"material-icons\">store</i><span class=\"menu-title\">Hàng thất lạc</span></a>");
                         html.Append("</li>");
-                        html.Append("<li class=\"bold\"><a class=\"waves-effect waves-cyan \" href=\"/manager/kien-that-lac\"><i class=\"material-icons\">store</i><span class=\"menu-title\">Kiện thất lạc</span></a>");
-                        html.Append("</li>");
+                        //html.Append("<li class=\"bold\"><a class=\"waves-effect waves-cyan \" href=\"/manager/kien-that-lac\"><i class=\"material-icons\">store</i><span class=\"menu-title\">Kiện thất lạc</span></a>");
+                        //html.Append("</li>");
 
                         html.Append("<li class=\"bold\"><a class=\"waves-effect waves-cyan \" href=\"/dang-xuat\"><i class=\"material-icons\">reply_all</i><span class=\"menu-title\">Đăng xuất</span></a></li>");
                         html.Append("</ul>");
@@ -479,10 +479,10 @@ namespace NHST.manager
                         html.Append("</li>");
                         html.Append("<li class=\"bold\"><a class=\"waves-effect waves-cyan \" href=\"/manager/Order-Transaction-Code\"><i class=\"material-icons\">store</i><span class=\"menu-title\">Quản lý mã vận đơn</span></a>");
                         html.Append("</li>");
-                        html.Append("<li class=\"bold\"><a class=\"waves-effect waves-cyan \" href=\"/manager/kien-troi-noi\"><i class=\"material-icons\">store</i><span class=\"menu-title\">Kiện trôi nổi</span></a>");
+                        html.Append("<li class=\"bold\"><a class=\"waves-effect waves-cyan \" href=\"/manager/kien-troi-noi\"><i class=\"material-icons\">store</i><span class=\"menu-title\">Hàng thất lạc</span></a>");
                         html.Append("</li>");
-                        html.Append("<li class=\"bold\"><a class=\"waves-effect waves-cyan \" href=\"/manager/kien-that-lac\"><i class=\"material-icons\">store</i><span class=\"menu-title\">Kiện thất lạc</span></a>");
-                        html.Append("</li>");
+                        //html.Append("<li class=\"bold\"><a class=\"waves-effect waves-cyan \" href=\"/manager/kien-that-lac\"><i class=\"material-icons\">store</i><span class=\"menu-title\">Kiện thất lạc</span></a>");
+                        //html.Append("</li>");
 
                         html.Append("<li class=\"bold\"><a class=\"waves-effect waves-cyan \" href=\"/manager/kien-that-lac.aspx\"><i class=\"material-icons\">rv_hookup</i><span class=\"menu-title\">Kiện thất lạc</span></a></li>");
                         html.Append("<li class=\"bold\"><a class=\"waves-effect waves-cyan \" href=\"/manager/kien-troi-noi.aspx\"><i class=\"material-icons\">dns</i><span class=\"menu-title\">Kiện trôi nổi</span></a></li>");

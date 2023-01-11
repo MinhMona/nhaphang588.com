@@ -21,9 +21,12 @@
                                 <h5>Cấu hình tài khoản</h5>
                             </div>
                             <div class="input-field col s12 m6">
+                                <asp:TextBox runat="server" ID="txtUID" BackColor="LightGray" placeholder="" type="text" ReadOnly="true"></asp:TextBox>
+                                <label for="rp_username">Mã tài khoản</label>
+                            </div>
+                            <div class="input-field col s12 m6">
                                 <asp:TextBox runat="server" ID="txtUsername" BackColor="LightGray" placeholder="" type="text" ReadOnly="true"></asp:TextBox>
                                 <label for="rp_username">Username</label>
-
                             </div>
 
                             <div class="input-field col s12 m6">
